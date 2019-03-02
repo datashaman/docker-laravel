@@ -1,0 +1,106 @@
+#
+# Built with https://github.com/datashaman/docker-laravel
+#
+# Packages: beanstalkd elasticsearch mariadb memcached redis php7.2 node11
+#
+
+version: '3.4'
+
+services:
+  beanstalkd:
+    image: schickling/beanstalkd
+    command: -b /var/lib/beanstalkd
+    volumes:
+      - beanstalkd:/var/lib/beanstalkd
+  
+  beanstalkd-console:
+    image: schickling/beanstalkd-console
+    command: php -S 0.0.0.0:2080 -t /source/public
+    environment:
+      - BEANSTALK_SERVERS=beanstalkd:11300
+    ports:
+      - 8082:2080
+    depends_on:
+      - beanstalkd
+
+  elasticsearch:
+    image: elasticsearch:5-alpine
+    environment:
+      - discovery.type=single-node
+
+  db:
+    image: mariadb:10.1-bionic
+    env_file: .env
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_USER=${DB_USERNAME}
+      - MARIADB_DATABASE=${DB_DATABASE}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+
+  memcached:
+    image: memcached:1.5-alpine
+
+  redis:
+    image: redis:4-alpine
+    volumes:
+      - redis:/data
+  
+  redis-commander:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+
+  web:
+    image: nginx:stable
+    depends_on:
+      - app
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/workspace
+      - ./templates/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  app:
+    build: .
+    user: root
+    command: ['/usr/sbin/php-fpm7.2']
+    env_file: .env
+    environment:
+      - MEMCACHED_HOST=memcached
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - DB_HOST=db
+      - QUEUE_HOST=beanstalkd
+      - REDIS_HOST=redis
+    depends_on:
+      - beanstalkd
+      - db
+      - memcached
+      - redis
+    volumes:
+      - ./:/workspace
+
+  worker:
+    build: .
+    command: ['php', 'artisan', 'queue:work', '--tries=1', '-vv']
+    env_file: .env
+    environment:
+      - MEMCACHED_HOST=memcached
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - DB_HOST=db
+      - QUEUE_HOST=beanstalkd
+      - REDIS_HOST=redis
+    depends_on:
+      - beanstalkd
+      - db
+      - memcached
+      - redis
+    volumes:
+      - ./:/workspace
+
+volumes:
+  beanstalkd:
+  redis:

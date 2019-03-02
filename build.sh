@@ -287,7 +287,7 @@ fi
 
 if [ ! $FOUND_NODE ]
 then
-    BUILD_PACKAGES+=(node)
+    BUILD_PACKAGES+=(node11)
 fi
 
 generate_dockerfile

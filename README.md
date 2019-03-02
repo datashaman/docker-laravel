@@ -27,4 +27,4 @@ Once it's pulled and built everything see which ports are open:
 
     docker-compose ports
 
-Open the [site](http://127.0.0.1).
+Open the [site](http://127.0.0.1:8080).
