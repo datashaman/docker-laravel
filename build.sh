@@ -198,7 +198,6 @@ generate_docker_compose () {
 
         for PACKAGE in ${BUILD_PACKAGES[@]}
         do
-            echo $PACKAGE
             case $PACKAGE in
                 beanstalkd)
                     DEPENDS_ON+=(beanstalkd)

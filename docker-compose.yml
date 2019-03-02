@@ -7,7 +7,6 @@
 version: '3.4'
 
 services:
-beanstalkd
   beanstalkd:
     image: schickling/beanstalkd
     command: -b /var/lib/beanstalkd
@@ -24,13 +23,11 @@ beanstalkd
     depends_on:
       - beanstalkd
 
-elasticsearch
   elasticsearch:
     image: elasticsearch:5-alpine
     environment:
       - discovery.type=single-node
 
-mariadb
   db:
     image: mariadb:10.1-bionic
     env_file: .env
@@ -40,11 +37,9 @@ mariadb
       - MARIADB_DATABASE=${DB_DATABASE}
       - MARIADB_PASSWORD=${DB_PASSWORD}
 
-memcached
   memcached:
     image: memcached:1.5-alpine
 
-redis
   redis:
     image: redis:4-alpine
     volumes:
@@ -59,8 +54,6 @@ redis
     depends_on:
       - redis
 
-php7.2
-node11
   web:
     image: nginx:stable
     depends_on:
