@@ -18,23 +18,31 @@ generate_dockerfile () {
             php*)
                 echo "Add apt packages for $PACKAGE"
                 APT+=(
-                    $PACKAGE-bcmath
-                    $PACKAGE-curl
-                    $PACKAGE-fpm
-                    $PACKAGE-gd
-                    $PACKAGE-intl
-                    $PACKAGE-mbstring
-                    $PACKAGE-sqlite3
-                    $PACKAGE-xml
-                    $PACKAGE-zip
+                    php$PHP_VERSION-bcmath
+                    php$PHP_VERSION-curl
+                    php$PHP_VERSION-fpm
+                    php$PHP_VERSION-gd
+                    php$PHP_VERSION-intl
+                    php$PHP_VERSION-mbstring
+                    php$PHP_VERSION-sqlite3
+                    php$PHP_VERSION-xml
+                    php$PHP_VERSION-zip
                 )
                 ;;
-            mariadb | mysql | postgresql)
+            mariadb)
+                echo "Add apt PHP client package for $PACKAGE"
+                APT+=(php$PHP_VERSION-mysql)
+                echo "Add apt client package for $PACKAGE"
+                APT+=($PACKAGE-client)
+                ;;
+            mysql)
+                echo "Add apt PHP client package for $PACKAGE"
+                APT+=(php$PHP_VERSION-mysql)
                 echo "Add apt client package for $PACKAGE"
                 APT+=($PACKAGE-client)
                 ;;
             memcached)
-                echo "Add apt client package for $PACKAGE"
+                echo "Add apt PHP client package for $PACKAGE"
                 APT+=(php-memcached)
                 ;;
             node*)
@@ -49,6 +57,12 @@ generate_dockerfile () {
                 KEYS+=(https://dl.yarnpkg.com/debian/pubkey.gpg)
                 SOURCES[yarn]="deb https://dl.yarnpkg.com/debian/ stable main"
                 APT+=(yarn)
+                ;;
+            postgresql)
+                echo "Add apt PHP client package for $PACKAGE"
+                APT+=(php$PHP_VERSION-pgsql)
+                echo "Add apt client package for $PACKAGE"
+                APT+=($PACKAGE-client)
                 ;;
             redis)
                 echo "Add apt tools package for $PACKAGE"
