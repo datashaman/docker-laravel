@@ -1,0 +1,8 @@
+sudo: false
+
+services:
+  docker
+
+script:
+  - docker-compose build
+  - docker-compose run test
