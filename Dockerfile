@@ -47,6 +47,7 @@ RUN apt-get update -y
 
 # Install apt packages
 RUN apt-get install -yq --no-install-recommends \
+   mariadb-client \
    nodejs \
    php7.2-bcmath \
    php7.2-curl \
@@ -57,6 +58,8 @@ RUN apt-get install -yq --no-install-recommends \
    php7.2-sqlite3 \
    php7.2-xml \
    php7.2-zip \
+   php-memcached \
+   redis-tools \
    yarn
 
 COPY templates/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf

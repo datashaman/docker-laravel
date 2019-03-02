@@ -12,7 +12,7 @@ generate_dockerfile () {
     declare -a KEYS
     declare -A SOURCES
 
-    for PACKAGE in "${BUILD_PACKAGES[@]}"
+    for PACKAGE in ${BUILD_PACKAGES[@]}
     do
         case $PACKAGE in
             php*)
@@ -32,6 +32,10 @@ generate_dockerfile () {
             mariadb | mysql | postgresql)
                 echo "Add apt client package for $PACKAGE"
                 APT+=($PACKAGE-client)
+                ;;
+            memcached)
+                echo "Add apt client package for $PACKAGE"
+                APT+=(php-memcached)
                 ;;
             node*)
                 VERSION=${PACKAGE#node}
@@ -144,7 +148,7 @@ s!%%BUILD_USER%%!${BUILD_USER}!g" Dockerfile
 generate_app_service () {
     NAME=$1
 
-    for PACKAGE in "${BUILD_PACKAGES[@]}"
+    for PACKAGE in ${BUILD_PACKAGES[@]}
     do
         case $PACKAGE in
             php*)
@@ -192,8 +196,9 @@ generate_docker_compose () {
         echo ""
         echo "services:"
 
-        for PACKAGE in $BUILD_PACKAGES
+        for PACKAGE in ${BUILD_PACKAGES[@]}
         do
+            echo $PACKAGE
             case $PACKAGE in
                 beanstalkd)
                     DEPENDS_ON+=(beanstalkd)
@@ -261,12 +266,17 @@ generate_docker_compose () {
 
 . .env
 
+declare -a BUILD_PACKAGES
+
 if [ $# -gt 0 ]
 then
-    BUILD_PACKAGES=$*
+    for i in {1..$#}
+    do
+        BUILD_PACKAGES+=($[$i])
+    done
 fi
 
-for PACKAGE in "${BUILD_PACKAGES[@]}"
+for PACKAGE in ${BUILD_PACKAGES[@]}
 do
     case $PACKAGE in
         php*)
