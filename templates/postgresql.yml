@@ -1,0 +1,7 @@
+db:
+  image: postgres:10-alpine
+  env_file: .env
+  environment:
+    - POSTGRES_USER=${DB_USERNAME}
+    - POSTGRES_DB=${DB_DATABASE}
+    - POSTGRES_PASSWORD=${DB_PASSWORD}

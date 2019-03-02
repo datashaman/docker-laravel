@@ -1,0 +1,15 @@
+beanstalkd:
+  image: schickling/beanstalkd
+  command: -b /var/lib/beanstalkd
+  volumes:
+    - beanstalkd:/var/lib/beanstalkd
+
+beanstalkd-console:
+  image: schickling/beanstalkd-console
+  command: php -S 0.0.0.0:2080 -t /source/public
+  environment:
+    - BEANSTALK_SERVERS=beanstalkd:11300
+  ports:
+    - 8082:2080
+  depends_on:
+    - beanstalkd

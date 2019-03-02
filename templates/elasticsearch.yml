@@ -1,0 +1,4 @@
+elasticsearch:
+  image: elasticsearch:5-alpine
+  environment:
+    - discovery.type=single-node
