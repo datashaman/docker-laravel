@@ -1,1 +1,7 @@
+#
+# Built with https://github.com/datashaman/docker-laravel
+#
+# Packages: %%BUILD_PACKAGES%%
+#
+
 version: '3.4'

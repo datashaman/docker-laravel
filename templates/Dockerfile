@@ -1,3 +1,9 @@
+#
+# Built with https://github.com/datashaman/docker-laravel
+#
+# Packages: %%BUILD_PACKAGES%%
+#
+
 FROM ubuntu:18.04
 
 ARG BUILD_MIRROR="%%BUILD_MIRROR%%"

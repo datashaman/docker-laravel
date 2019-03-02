@@ -56,10 +56,10 @@ generate_dockerfile () {
     echo "Build Dockerfile"
     cp templates/Dockerfile Dockerfile
 
-    sed -i "
-    s#%%BUILD_MIRROR%%#${BUILD_MIRROR}#g
-    s#%%BUILD_USER%%#${BUILD_USER}#g
-    " Dockerfile
+    PACKAGES="${BUILD_PACKAGES[@]}"
+    sed -i "s!%%BUILD_MIRROR%%!${BUILD_MIRROR}!g
+s!%%BUILD_PACKAGES%%!${PACKAGES}!g
+s!%%BUILD_USER%%!${BUILD_USER}!g" Dockerfile
 
     {
         echo ""
@@ -184,6 +184,9 @@ generate_docker_compose () {
 
     echo "Build docker-compose.yml"
     cp templates/docker-compose.yml docker-compose.yml
+
+    PACKAGES="${BUILD_PACKAGES[@]}"
+    sed -i "s!%%BUILD_PACKAGES%%!${PACKAGES}!g" docker-compose.yml
 
     {
         echo ""
