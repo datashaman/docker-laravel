@@ -30,8 +30,7 @@ class DockerLaravelTest extends TestCase
 
     public function testBeanstalkd()
     {
-        Log::shouldReceive('warning')
-            ->with('ExampleJob dispatched');
+        Log::shouldReceive('warning')->with('ExampleJob dispatched');
         dispatch(ExampleJob::class);
     }
 

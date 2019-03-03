@@ -1,18 +1,20 @@
-sudo: false
-
 language: php
+
 php:
   - 7.2
 
+sudo: false
+
 services:
-  docker
+  - docker
 
 script:
   - cp .env.travis .env
   - composer create-project --prefer-dist laravel/laravel .laravel "5.8.*"
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
-  - mkdir .laravel/templates && cp templates/nginx.conf templates/php-fpm.conf .laravel/templates
+  - mkdir .laravel/templates 
+  - cp templates/nginx.conf templates/php-fpm.conf .laravel/templates
   - cp DockerLaravelTest.php .laravel/tests
   - cd .laravel
   - composer require pda/pheanstalk:~4.0 predis/predis:~1.0
