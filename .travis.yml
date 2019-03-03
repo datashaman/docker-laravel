@@ -12,6 +12,7 @@ script:
   - composer create-project --prefer-dist laravel/laravel .laravel "5.8.*"
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
+  - mkdir .laravel/templates && cp templates/nginx.conf templates/php-fpm.conf .laravel/templates
   - cd .laravel && docker-compose run app phpunit
 
 cache:
