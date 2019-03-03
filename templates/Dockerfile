@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN useradd --shell /bin/bash -u 1000 -o -c "" -m ${BUILD_USER}
 
-RUN sed -i "s#http://archive.ubuntu.com#${BUILD_MIRROR}#g" /etc/apt/sources.list
+RUN [ -n "${BUILD_MIRROR}" ] && sed -i "s#http://archive.ubuntu.com#${BUILD_MIRROR}#g" /etc/apt/sources.list
 
 RUN apt-get update -y \
     && apt-get install -yq --no-install-recommends \
