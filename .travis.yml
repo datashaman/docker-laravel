@@ -5,7 +5,7 @@ services:
 
 script:
   - cp .env.travis .env
-  - composer create-project laravel/laravel --prefer-dist .laravel
+  - composer create-project --prefer-dist laravel/laravel .laravel "5.8.*"
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
   - cd .laravel && docker-compose run app phpunit
