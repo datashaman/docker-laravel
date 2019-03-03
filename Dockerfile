@@ -1,7 +1,7 @@
 #
 # Built with https://github.com/datashaman/docker-laravel
 #
-# Packages: beanstalkd elasticsearch mariadb memcached redis php7.2 node11
+# Packages: beanstalkd elasticsearch mailhog mariadb memcached redis php7.2 node11
 #
 
 FROM ubuntu:18.04

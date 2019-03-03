@@ -68,6 +68,9 @@ generate_dockerfile () {
                 echo "Add apt tools package for $PACKAGE"
                 APT+=($PACKAGE-tools)
                 ;;
+            *)
+                APT+=($PACKAGE)
+                ;;
         esac
     done
 
@@ -176,14 +179,20 @@ generate_app_service () {
                 printf "    env_file: .env\n"
                 printf "    environment:\n"
 
-                for KEY in "${!ENVIRONMENT[@]}"
+                IFS=$'\n' SORTED_ENVIRONMENT=($(sort <<<"${!ENVIRONMENT[*]}"))
+                unset IFS
+
+                for KEY in "${SORTED_ENVIRONMENT[@]}"
                 do
                     printf "      - $KEY=${ENVIRONMENT[$KEY]}\n"
                 done
 
+                IFS=$'\n' SORTED_DEPENDS_ON=($(sort <<<"${DEPENDS_ON[*]}"))
+                unset IFS
+
                 printf "    depends_on:\n"
 
-                for SERVICE in "${DEPENDS_ON[@]}"
+                for SERVICE in "${SORTED_DEPENDS_ON[@]}"
                 do
                     printf "      - $SERVICE\n"
                 done
@@ -223,6 +232,14 @@ generate_docker_compose () {
                 elasticsearch)
                     ENVIRONMENT[ELASTICSEARCH_HOST]=elasticsearch:9200
                     sed 's/^/  /' templates/elasticsearch.yml
+                    echo ""
+                    ;;
+                mailhog)
+                    DEPENDS_ON+=(mailhog)
+                    ENVIRONMENT[MAIL_DRIVER]=smtp
+                    ENVIRONMENT[MAIL_HOST]=mailhog
+                    ENVIRONMENT[MAIL_PORT]=1025
+                    sed 's/^/  /' templates/mailhog.yml
                     echo ""
                     ;;
                 mariadb)

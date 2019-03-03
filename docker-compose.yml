@@ -1,7 +1,7 @@
 #
 # Built with https://github.com/datashaman/docker-laravel
 #
-# Packages: beanstalkd elasticsearch mariadb memcached redis php7.2 node11
+# Packages: beanstalkd elasticsearch mailhog mariadb memcached redis php7.2 node11
 #
 
 version: '3.4'
@@ -19,7 +19,7 @@ services:
     environment:
       - BEANSTALK_SERVERS=beanstalkd:11300
     ports:
-      - 8082:2080
+      - 2080:2080
     depends_on:
       - beanstalkd
 
@@ -27,6 +27,11 @@ services:
     image: elasticsearch:5-alpine
     environment:
       - discovery.type=single-node
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - 8025:8025
 
   db:
     image: mariadb:10.1-bionic
@@ -72,14 +77,18 @@ services:
     command: ['/usr/sbin/php-fpm7.2']
     env_file: .env
     environment:
-      - MEMCACHED_HOST=memcached
-      - ELASTICSEARCH_HOST=elasticsearch:9200
       - DB_HOST=db
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - MAIL_DRIVER=smtp
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+      - MEMCACHED_HOST=memcached
       - QUEUE_HOST=beanstalkd
       - REDIS_HOST=redis
     depends_on:
       - beanstalkd
       - db
+      - mailhog
       - memcached
       - redis
     volumes:
@@ -90,14 +99,18 @@ services:
     command: ['php', 'artisan', 'queue:work', '--tries=1', '-vv']
     env_file: .env
     environment:
-      - MEMCACHED_HOST=memcached
-      - ELASTICSEARCH_HOST=elasticsearch:9200
       - DB_HOST=db
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - MAIL_DRIVER=smtp
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+      - MEMCACHED_HOST=memcached
       - QUEUE_HOST=beanstalkd
       - REDIS_HOST=redis
     depends_on:
       - beanstalkd
       - db
+      - mailhog
       - memcached
       - redis
     volumes:

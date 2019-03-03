@@ -11,7 +11,7 @@ Checkout the repository:
 
 Generate _Dockerfile_ and _docker-compose.yml_ with:
 
-    ./build.sh php7.2 beanstalkd memcached mariadb elasticsearch redis
+    ./build.sh php7.2 beanstalkd mailhog memcached mariadb elasticsearch redis
 
 Move Dockerfile and docker-compose.yml into your project folder.
 
@@ -29,9 +29,10 @@ Once it's pulled and built everything see which ports are open:
 
 The stack exposes the following HTTP endpoints:
 
+- [beanstalkd console](http://127.0.0.1:2080)
+- [mailhog](http://127.0.0.1:8025)
 - [web app](http://127.0.0.1:8080)
 - [redis commander](http://127.0.0.1:8081)
-- [beanstalkd console](http://127.0.0.1:8082)
 
 The _app_ uses the _PHP-FPM_ binary, but can also be used for CLI usage. Do something like this to run your migrations and setup up your instance's data:
 
@@ -49,13 +50,14 @@ And use it like this:
 
 Services available in the stack:
 
-- _app_ running workspace code with PHP7.2
-- _worker_ running workspace code with PHP7.2
-- _web_ running nginx
-- _db_ running mysql, mariadb or postgresql
-- _redis_
-- _redis-commander_
-- _memcached_
+- _app_ running workspace code
 - _beanstalkd_
 - _beanstalkd-console_
+- _db_ running mysql, mariadb or postgresql
 - _elasticsearch_
+- _mailhog_
+- _memcached_
+- _redis_
+- _redis-commander_
+- _web_ running nginx
+- _worker_ running workspace code (_--tries_ set to 1)
