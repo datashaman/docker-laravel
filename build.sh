@@ -22,6 +22,7 @@ generate_dockerfile () {
                     php$PHP_VERSION-curl
                     php$PHP_VERSION-fpm
                     php$PHP_VERSION-gd
+                    php$PHP_VERSION-imagick
                     php$PHP_VERSION-intl
                     php$PHP_VERSION-mbstring
                     php$PHP_VERSION-sqlite3
@@ -67,6 +68,8 @@ generate_dockerfile () {
             redis)
                 echo "Add apt tools package for $PACKAGE"
                 APT+=($PACKAGE-tools)
+                ;;
+            beanstalkd | elasticsearch | mailhog | minio)
                 ;;
             *)
                 APT+=($PACKAGE)
@@ -255,6 +258,13 @@ generate_docker_compose () {
                     sed 's/^/  /' templates/memcached.yml
                     echo ""
                     ;;
+                minio)
+                    DEPENDS_ON+=(minio)
+                    ENVIRONMENT[MINIO_ENDPOINT]=http://minio:9000
+                    VOLUMES+=(minio)
+                    sed 's/^/  /' templates/minio.yml
+                    echo ""
+                    ;;
                 mysql)
                     containsElement "db" "${DEPENDS_ON[@]}" || DEPENDS_ON+=(db)
                     ENVIRONMENT[DB_HOST]=db
@@ -286,9 +296,12 @@ generate_docker_compose () {
 
         if [ ${#VOLUMES[@]} -gt 0 ]
         then
+            IFS=$'\n' SORTED_VOLUMES=($(sort <<<"${VOLUMES[*]}"))
+            unset IFS
+
             printf "volumes:\n"
 
-            for VOLUME in "${VOLUMES[@]}"
+            for VOLUME in "${SORTED_VOLUMES[@]}"
             do
                 printf "  $VOLUME:\n"
             done

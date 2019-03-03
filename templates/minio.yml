@@ -1,0 +1,11 @@
+minio:
+  image: minio/minio
+  volumes:
+    - minio:/data
+  ports:
+    - 9000:9000
+  env_file: .env
+  environment:
+    - MINIO_ACCESS_KEY
+    - MINIO_SECRET_KEY
+  command: ["server", "http://minio/data"]

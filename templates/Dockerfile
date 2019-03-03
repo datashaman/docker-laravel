@@ -25,6 +25,7 @@ RUN apt-get update -y \
         git \
         gnupg \
         lsof \
+        netcat \
         net-tools \
         procps \
         rsync \

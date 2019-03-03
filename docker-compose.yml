@@ -1,7 +1,7 @@
 #
 # Built with https://github.com/datashaman/docker-laravel
 #
-# Packages: beanstalkd elasticsearch mailhog mariadb memcached redis php7.2 node11
+# Packages: beanstalkd elasticsearch mailhog mariadb memcached minio redis php7.2 node11
 #
 
 version: '3.4'
@@ -47,6 +47,18 @@ services:
   memcached:
     image: memcached:1.5-alpine
 
+  minio:
+    image: minio/minio
+    volumes:
+      - minio:/data
+    ports:
+      - 9000:9000
+    env_file: .env
+    environment:
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY
+    command: ["server", "http://minio/data"]
+
   redis:
     image: redis:4-alpine
     volumes:
@@ -83,6 +95,7 @@ services:
       - MAIL_HOST=mailhog
       - MAIL_PORT=1025
       - MEMCACHED_HOST=memcached
+      - MINIO_ENDPOINT=http://minio:9000
       - QUEUE_HOST=beanstalkd
       - REDIS_HOST=redis
     depends_on:
@@ -90,6 +103,7 @@ services:
       - db
       - mailhog
       - memcached
+      - minio
       - redis
     volumes:
       - ./:/workspace
@@ -105,6 +119,7 @@ services:
       - MAIL_HOST=mailhog
       - MAIL_PORT=1025
       - MEMCACHED_HOST=memcached
+      - MINIO_ENDPOINT=http://minio:9000
       - QUEUE_HOST=beanstalkd
       - REDIS_HOST=redis
     depends_on:
@@ -112,11 +127,13 @@ services:
       - db
       - mailhog
       - memcached
+      - minio
       - redis
     volumes:
       - ./:/workspace
 
 volumes:
   beanstalkd:
+  minio:
   mysql:
   redis:
