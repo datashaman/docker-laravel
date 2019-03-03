@@ -13,7 +13,10 @@ script:
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
   - mkdir .laravel/templates && cp templates/nginx.conf templates/php-fpm.conf .laravel/templates
-  - cd .laravel && docker-compose run app ./vendor/bin/phpunit
+  - cp DockerLaravelTest.php .laravel/tests
+  - cd .laravel
+  - composer require pda/pheanstalk:~4.0 predis/predis:~1.0
+  - docker-compose run app ./vendor/bin/phpunit
 
 cache:
   directories:
