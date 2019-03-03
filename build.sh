@@ -235,6 +235,7 @@ generate_docker_compose () {
                     echo ""
                     ;;
                 elasticsearch)
+                    DEPENDS_ON+=(elasticsearch)
                     ENVIRONMENT[ELASTICSEARCH_HOST]=elasticsearch:9200
                     sed 's/^/  /' templates/elasticsearch.yml
                     echo ""

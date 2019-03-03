@@ -1,0 +1,6 @@
+{
+    "require": {
+        "pda/pheanstalk": "~4.0",
+        "predis/predis": "~1.0"
+    }
+}

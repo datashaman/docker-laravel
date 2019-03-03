@@ -101,6 +101,7 @@ services:
     depends_on:
       - beanstalkd
       - db
+      - elasticsearch
       - mailhog
       - memcached
       - minio
@@ -125,6 +126,7 @@ services:
     depends_on:
       - beanstalkd
       - db
+      - elasticsearch
       - mailhog
       - memcached
       - minio

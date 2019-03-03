@@ -1,14 +1,16 @@
 <?php
 
-namespace Tests;
+namespace Tests\Feature;
 
+use Cache;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Log;
-use Mockery;
+use Tests\TestCase;
 
 class ExampleJob
 {
@@ -22,16 +24,10 @@ class ExampleJob
 
 class DockerLaravelTest extends TestCase
 {
-    public function tearDown()
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
     public function testBeanstalkd()
     {
         Log::shouldReceive('warning')->with('ExampleJob dispatched');
-        dispatch(ExampleJob::class);
+        dispatch(new ExampleJob());
     }
 
     public function testBeanstalkdConsole()
@@ -40,6 +36,10 @@ class DockerLaravelTest extends TestCase
 
     public function testElasticsearch()
     {
+        $client = ClientBuilder::create()
+            ->setHosts(['elasticsearch:9200'])
+            ->build();
+        $this->assertNotNull($client->info());
     }
 
     public function testMailhog()
@@ -52,6 +52,8 @@ class DockerLaravelTest extends TestCase
 
     public function testMemcached()
     {
+        Cache::put('test', 1234);
+        $this->assertEquals(1234, Cache::get('test'));
     }
 
     public function testMinio()
