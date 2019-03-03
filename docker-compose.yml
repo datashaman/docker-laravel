@@ -36,6 +36,8 @@ services:
       - MARIADB_USER=${DB_USERNAME}
       - MARIADB_DATABASE=${DB_DATABASE}
       - MARIADB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
 
   memcached:
     image: memcached:1.5-alpine
@@ -103,4 +105,5 @@ services:
 
 volumes:
   beanstalkd:
+  mysql:
   redis:

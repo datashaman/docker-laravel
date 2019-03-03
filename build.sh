@@ -228,6 +228,7 @@ generate_docker_compose () {
                 mariadb)
                     containsElement "db" "${DEPENDS_ON[@]}" || DEPENDS_ON+=(db)
                     ENVIRONMENT[DB_HOST]=db
+                    VOLUMES+=(mysql)
                     sed 's/^/  /' templates/mariadb.yml
                     echo ""
                     ;;
@@ -240,6 +241,7 @@ generate_docker_compose () {
                 mysql)
                     containsElement "db" "${DEPENDS_ON[@]}" || DEPENDS_ON+=(db)
                     ENVIRONMENT[DB_HOST]=db
+                    VOLUMES+=(mysql)
                     sed 's/^/  /' templates/mysql.yml
                     echo ""
                     ;;

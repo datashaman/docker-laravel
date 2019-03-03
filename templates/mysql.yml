@@ -6,3 +6,5 @@ db:
     - MYSQL_USER=${DB_USERNAME}
     - MYSQL_DATABASE=${DB_DATABASE}
     - MYSQL_PASSWORD=${DB_PASSWORD}
+  volumes:
+    - mysql:/var/lib/mysql

@@ -11,7 +11,7 @@ Checkout the repository:
 
 Generate _Dockerfile_ and _docker-compose.yml_ with:
 
-    ./build.sh php7.2 memcached mariadb elasticsearch redis
+    ./build.sh php7.2 beanstalkd memcached mariadb elasticsearch redis
 
 Move Dockerfile and docker-compose.yml into your project folder.
 
@@ -25,6 +25,37 @@ Bring the Compose stack up:
 
 Once it's pulled and built everything see which ports are open:
 
-    docker-compose ports
+    docker-compose ps
 
-Open the [site](http://127.0.0.1:8080).
+The stack exposes the following HTTP endpoints:
+
+- [web app](http://127.0.0.1:8080)
+- [redis commander](http://127.0.0.1:8081)
+- [beanstalkd console](http://127.0.0.1:8082)
+
+The _app_ uses the _PHP-FPM_ binary, but can also be used for CLI usage. Do something like this to run your migrations and setup up your instance's data:
+
+- docker-compose run app composer install
+- docker-compose run app php artisan migrate --seed
+
+Typing that all the time is a _PITA_, so setup an alias in your _.bashrc_ or similar:
+
+    alias dl='docker-compose run app'
+
+And use it like this:
+
+    dl composer install
+    dl php artisan migrate --seed
+
+Services available in the stack:
+
+- _app_ running workspace code with PHP7.2
+- _worker_ running workspace code with PHP7.2
+- _web_ running nginx
+- _db_ running mysql, mariadb or postgresql
+- _redis_
+- _redis-commander_
+- _memcached_
+- _beanstalkd_
+- _beanstalkd-console_
+- _elasticsearch_
