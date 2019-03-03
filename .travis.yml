@@ -6,9 +6,9 @@ services:
 script:
   - cp .env.travis .env
   - composer create-project laravel/laravel --prefer-dist .laravel
-  - cd .laravel && composer install
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
+  - cd .laravel && composer install
 
 cache:
   directories:
