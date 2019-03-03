@@ -8,7 +8,7 @@ script:
   - composer create-project laravel/laravel --prefer-dist .laravel
   - ./build.sh
   - cp Dockerfile docker-compose.yml .laravel
-  - cd .laravel && composer install
+  - cd .laravel && docker-compose run app phpunit
 
 cache:
   directories:
