@@ -6,7 +6,7 @@
 
 FROM ubuntu:18.04
 
-ARG BUILD_MIRROR="%%BUILD_MIRROR%%"
+ARG BUILD_MIRROR="http://archive.ubuntu.com"
 ARG BUILD_USER="%%BUILD_USER%%"
 
 ENV DEBIAN_FRONTEND=noninteractive

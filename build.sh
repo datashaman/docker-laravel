@@ -81,8 +81,10 @@ generate_dockerfile () {
     cp templates/Dockerfile Dockerfile
 
     PACKAGES="${BUILD_PACKAGES[@]}"
-    sed -i "s!%%BUILD_MIRROR%%!${BUILD_MIRROR}!g
-s!%%BUILD_PACKAGES%%!${PACKAGES}!g
+
+    [ -n "${BUILD_MIRROR}" ] && sed -i "s!http://archive.ubuntu.com!${BUILD_MIRROR}!g" Dockerfile
+
+    sed -i "s!%%BUILD_PACKAGES%%!${PACKAGES}!g
 s!%%BUILD_USER%%!${BUILD_USER}!g" Dockerfile
 
     {
