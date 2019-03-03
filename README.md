@@ -31,6 +31,7 @@ The stack exposes the following HTTP endpoints:
 
 - [beanstalkd console](http://127.0.0.1:2080)
 - [mailhog](http://127.0.0.1:8025)
+- [minio](http://127.0.0.1:9000)
 - [web app](http://127.0.0.1:8080)
 - [redis commander](http://127.0.0.1:8081)
 
@@ -41,12 +42,12 @@ The _app_ uses the _PHP-FPM_ binary, but can also be used for CLI usage. Do some
 
 Typing that all the time is a _PITA_, so setup an alias in your _.bashrc_ or similar:
 
-    alias dl='docker-compose run app'
+    alias dcra='docker-compose run app'
 
 And use it like this:
 
-    dl composer install
-    dl php artisan migrate --seed
+    dcra composer install
+    dcra php artisan migrate --seed
 
 Services available in the stack:
 
@@ -57,7 +58,10 @@ Services available in the stack:
 - _elasticsearch_
 - _mailhog_
 - _memcached_
+- _minio_
 - _redis_
 - _redis-commander_
 - _web_ running nginx
 - _worker_ running workspace code (_--tries_ set to 1)
+
+The sample _Dockerfile_ and _docker-compose.yml_ files in this repo build all the above (using _mariadb_ as _db_).
