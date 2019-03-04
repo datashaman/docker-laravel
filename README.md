@@ -13,11 +13,22 @@ Generate _Dockerfile_ and _docker-compose.yml_ with:
 
     ./build.sh php7.2 beanstalkd mailhog memcached mariadb elasticsearch redis
 
-Move Dockerfile and docker-compose.yml into your project folder.
+Copy the following into your project folder:
+
+- Dockerfile
+- docker-compose.yml
+- templates/nginx.conf
+- templates/php-fpm.conf
+
+If you want to put the templates somewhere else, adjust the paths in _Dockerfile_ and _docker-compose.yml_.
+
+The _php-fpm.conf_ file is needed at build time (and maybe also runtime), and the _nginx.conf_ file is needed at runtime.
 
 Edit your current _.env_ file and remove any references to hostnames of services you've just added.
 
 For example, `DB_HOST`, `ELASTICSEARCH_HOST`, `MEMCACHED_HOST`, `REDIS_HOST`. These will be configured inside the Compose stack.
+
+Remove any mail-related variables as well, _mailhog_ will handle that.
 
 Bring the Compose stack up:
 
